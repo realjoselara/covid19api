@@ -4,17 +4,18 @@ Building an API that returns the current information about the Coronavirus (Covi
 # Scrapper
 Collects data from [World Meters](https://www.worldometers.info/coronavirus/) every hour and stores it in a MongoDB.
 
-Some assumetions:
+Some assumptions:
 
     > MongoDB is install in system as local host.
+    > Pipenv is install.
 
-The scrapper runs independently from the API. You can install the virtual enviroment using Pipenv at the top level folder. 
+The scrapper runs independently from the API. You can install the virtual enviroment using Pipenv at the top level folder.
 
 Run code as:
 ```
-- pipenv install (if you don't have pipenv install you can install it using pip -m install pipenv)
-- pipenv shell: activates virtual environment.
-- inside scrapper folder run: python scrapper.py
+- pipenv shell
+- pipenv install
+- python scrapper.py
 ```
 
 # API
