@@ -174,6 +174,7 @@ def collect_country_from_table():
             individual_country = []
             for item in row.find_all('td'):
                 individual_country.append(item.text.strip())
+            
             country_list_info.append(individual_country)
             del individual_country
 
@@ -184,8 +185,32 @@ def collect_country_from_table():
     except:
         log.error("Exception occurred", exc_info=True)
     finally:
-        countries = clean_table_list_data(country_list_info)
-        return countries
+        countries = clean_table_list_data(country_list_info, return_type="list")
+
+        # modified country list to dictionary
+
+        countries_list = []
+        for country in countries:
+
+            modified_list_to_dict = dict()
+            coun = country[0].lower().strip().replace('.', '')
+            coun = coun.replace(' ', '_')
+            coun = coun.replace('-', '_')
+
+            modified_list_to_dict[coun] = {
+                'total_cases': country[1],
+                'new_cases': country[2],
+                'total_death': country[3],
+                'new_death': country[4],
+                'total_recovered': country[5],
+                'active_cases': country[6],
+                'serious_critical': country[7],
+                'total_cases_per_1M_population': country[8],
+            }
+            countries_list.append(modified_list_to_dict)
+            del modified_list_to_dict
+
+        return countries_list
 
 def get_data():
     '''Returns a object with all coronavirus data'''
@@ -193,6 +218,7 @@ def get_data():
     data.update(get_active_cases())
     data.update(collect_total_number_data())
     data['countries'] = collect_country_from_table()
+    # print(data['countries'])
     data['Date'] = str(datetime.today())
 
     return data
