@@ -7,8 +7,13 @@ URL = 'mongodb://localhost:27017/'
 client = MongoClient(URL)
 db = client['coronavirus']
 
-@app.route('/api/all')
+
+@app.route('/')
 def index():
+    return "Please visit /api/all"
+
+@app.route('/api/all')
+def api_all():
     data = db.datos.find()
     new_data = []
     for dt in data:
