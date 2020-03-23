@@ -4,6 +4,7 @@ from flask import jsonify
 
 
 URL = 'mongodb://localhost:27017/'
+# URL = os.environ.get('MONGO_URL')
 client = MongoClient(URL)
 db = client['coronavirus']
 
@@ -19,5 +20,4 @@ def api_all():
     for dt in data:
         dt['_id'] = str(dt['_id'])
         new_data.append(dt)
-
     return jsonify({"result": new_data})

@@ -129,19 +129,37 @@ def collect_country_data():
     finally:
         return country_list_info
 
-def clean_table_list_data(country_list_info):
-    '''Use pandas to clena the data'''
+def clean_table_list_data(country_list_info, return_type='list'):
+    '''
+        Use pandas to clena the data returns a 2d list of the data or DF (pandas DataFrame)
+        :params: country_list_info a list of the country information collected from collect_country_data()
+        :params: return_type options default: List if return_type is not expecify or DF (pandas DataFrame) 
+    
+    '''
+
+    if not isinstance(country_list_info, list) and not isinstance(country_list_info[0], list):
+        raise TypeError
+
     try:
         # Cleaning the data 
         columns_table=['Country', 'Total Cases','New Cases', 'Total Death', 'New Death', 'Total Recovered', 'Active Cases', 'Serious Critical', 'Total Cases / 1M pop']
         # df = pd.DataFrame(country_list_info, columns=columns_table)
         df = pd.DataFrame(country_list_info)
+
+        # remove all + , and empty spaces
         df = df.replace({'\+': '', ',': ''}, regex=True)
         col = df.select_dtypes(object).columns
+
+        # convert DataFrame columns to numeric values, ignore values that cannot be cast like country name
         df[col] = df[col].apply(pd.to_numeric, errors='ignore')
         df = df.replace(np.nan, 0)
-        country_list_info = df.values.tolist()
-        return country_list_info
+
+        # Conver dataFrame to a list
+        if return_type == "list":
+            country_list_info = df.values.tolist()
+            return country_list_info
+        elif return_type == 'DF':
+            return df
     except:
         log.error("Exception occurred", exc_info=True)
 
@@ -180,10 +198,10 @@ def get_data():
     return data
 
 if __name__ == "__main__":
+    ''' Collects the data and store in to MongoDB, 
+        Assuming use has Mongo db install with coronavirus DB'''
     try:
         data = get_data()
-        import pprint
-        pprint.pprint(data)
         db = connection_client()
         db.datos.insert_one(data)
     except:
