@@ -182,6 +182,8 @@ def get_data():
 if __name__ == "__main__":
     try:
         data = get_data()
+        import pprint
+        pprint.pprint(data)
         db = connection_client()
         db.datos.insert_one(data)
     except:
