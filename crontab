@@ -1,0 +1,2 @@
+# run every 6 hours
+* 6 * * * $(which python3) /etc/covid-19/scrapper/scrapper.py
